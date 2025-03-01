@@ -67,7 +67,7 @@ private extension AssSubtitlesView {
         containerView: PlatformView,
         storeCancellable: @escaping (AnyCancellable) -> Void
     ) {
-        let cancellable = containerView
+        let cancellable = playerView
             .publisher(for: \.frame, options: [.initial, .new])
             .receive(on: DispatchQueue.main)
             .sink { [weak self, weak playerView, weak containerView] _ in

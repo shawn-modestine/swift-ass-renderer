@@ -24,7 +24,7 @@ public struct FontConfig: FontConfigType {
     private let fileManager: FileManagerType
     private let moduleBundle: BundleType
     private let libraryWrapper: LibraryWrapperType.Type
-    private let fontsPath: URL
+    private let fontsPath: [URL]
     private let fontsCachePath: URL?
     private let defaultFontName: String?
     private let defaultFontFamily: String?
@@ -42,7 +42,7 @@ public struct FontConfig: FontConfigType {
     ///   This font family will be used as fallback when specified font family in tracks is not found.
     ///   - fontProvider: Default font shaper.
     public init(
-        fontsPath: URL,
+        fontsPath: [URL],
         fontsCachePath: URL? = nil,
         defaultFontName: String? = nil,
         defaultFontFamily: String? = nil,
@@ -64,7 +64,7 @@ public struct FontConfig: FontConfigType {
         fileManager: FileManagerType,
         moduleBundle: BundleType,
         libraryWrapper: LibraryWrapperType.Type,
-        fontsPath: URL,
+        fontsPath: [URL],
         fontsCachePath: URL?,
         defaultFontName: String?,
         defaultFontFamily: String?,
@@ -119,11 +119,17 @@ public struct FontConfig: FontConfigType {
     }
 
     private var fontConfContents: String {
-        """
+        var fontConfigXML = """
         <?xml version="1.0"?>
         <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
         <fontconfig>
-            <dir>\(fontsPath.path)</dir>
+        """
+        for dir in fontsPath {
+            fontConfigXML += "    <dir>\(dir)</dir>\n"
+        }
+
+        // Ajouter le cache et les alias de polices
+        fontConfigXML += """
             <cachedir>\(cachePath.path)</cachedir>
             <match target="pattern">
                 <test qual="any" name="family">
@@ -156,5 +162,6 @@ public struct FontConfig: FontConfigType {
             </config>
         </fontconfig>
         """
+        return fontConfigXML
     }
 }
