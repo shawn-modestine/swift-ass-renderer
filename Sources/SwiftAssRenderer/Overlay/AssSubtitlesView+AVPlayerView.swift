@@ -52,14 +52,25 @@ private extension AssSubtitlesView {
     func layout(playerView: AVPlayerView, containerView: PlatformView) {
         guard !containerView.bounds.size.isEmpty, !playerView.videoBounds.isEmpty else { return }
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.deactivate(constraints)
-        removeConstraints(constraints)
-        NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: playerView.videoBounds.width),
-            heightAnchor.constraint(equalToConstant: playerView.videoBounds.height),
-            centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
-        ])
+        
+        if widthConstraint == nil || heightConstraint == nil || centerXConstraint == nil || centerYConstraint == nil {
+            // Create constraints only once
+            widthConstraint = widthAnchor.constraint(equalToConstant: playerView.videoBounds.width)
+            heightConstraint = heightAnchor.constraint(equalToConstant: playerView.videoBounds.height)
+            centerXConstraint = centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
+            centerYConstraint = centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            
+            NSLayoutConstraint.activate([
+                widthConstraint!,
+                heightConstraint!,
+                centerXConstraint!,
+                centerYConstraint!
+            ])
+        } else {
+            // Just update the values
+            widthConstraint?.constant = playerView.videoBounds.width
+            heightConstraint?.constant = playerView.videoBounds.height
+        }
     }
 
     func observeContainerFrame(

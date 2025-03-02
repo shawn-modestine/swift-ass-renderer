@@ -25,6 +25,11 @@ public final class AssSubtitlesView: PlatformView {
     private var lastRenderBounds = CGRect.zero
     private var cancellables = Set<AnyCancellable>()
     private var imageCallback: AssSubtitlesImageCallback?
+    
+    var widthConstraint: NSLayoutConstraint?
+    var heightConstraint: NSLayoutConstraint?
+    var centerXConstraint: NSLayoutConstraint?
+    var centerYConstraint: NSLayoutConstraint?
 
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) not supported")
